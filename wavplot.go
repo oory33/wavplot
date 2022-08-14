@@ -39,8 +39,9 @@ func main() {
 	var max float64
 
 	for _, bin := range specLcmplx {
-		max = math.Max(max, plvtodb(cmplx.Abs(bin)))
-		specL = append(specL, plvtodb(cmplx.Abs(bin)))
+		val := plvtodb(cmplx.Abs(bin))
+		max = math.Max(max, val)
+		specL = append(specL, val)
 	} //fftした後のパワーdB値を格納
 
 	for i, bin := range specL {
