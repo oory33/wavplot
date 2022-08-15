@@ -1,4 +1,4 @@
-module wavplot
+module github.com/oory33/wavplot
 
 go 1.19
 
