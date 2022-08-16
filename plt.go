@@ -86,7 +86,6 @@ func Spec(r *wav.Reader, ch uint, name string) {
 
 func Complex(in []complex128, name string) {
 	p := plot.New()
-	p.X.Scale = plot.LogScale{}
 	p.X.Min = 20
 
 	data := make([]float64, len(in))
