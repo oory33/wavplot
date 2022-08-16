@@ -84,7 +84,7 @@ func Spec(r *wav.Reader, ch uint, name string) {
 	}
 }
 
-func Complex(in []complex128) {
+func Complex(in []complex128, name string) {
 	p := plot.New()
 	p.X.Scale = plot.LogScale{}
 	p.X.Min = 20
@@ -99,6 +99,10 @@ func Complex(in []complex128) {
 		panic(err1)
 	}
 	l.LineStyle.Width = vg.Points(1)
+	p.Add(l)
+	if err := p.Save(10*vg.Inch, 10*vg.Inch, fmt.Sprintf("./output/%s.png", name)); err != nil {
+		panic(err)
+	}
 }
 
 func floats2data(data []float64) plotter.XYs {
