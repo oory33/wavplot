@@ -84,6 +84,32 @@ func Spec(r *wav.Reader, ch uint, name string) {
 	}
 }
 
+func Complex(in []complex128) {
+	p := plot.New()
+	p.X.Scale = plot.LogScale{}
+	p.X.Min = 20
+
+	data := make([]float64, len(in))
+	for i := range in {
+		data[i] = cmplx.Abs(in[i])
+	}
+
+	l, err1 := plotter.NewLine(floats2data(data))
+	if err1 != nil {
+		panic(err1)
+	}
+	l.LineStyle.Width = vg.Points(1)
+}
+
+func floats2data(data []float64) plotter.XYs {
+	res := make(plotter.XYs, len(data))
+	for i, v := range data {
+		res[i].X = float64(i)
+		res[i].Y = v
+	}
+	return res
+}
+
 func normtime(data []float64, srate uint32, bit uint16) plotter.XYs {
 	pts := make(plotter.XYs, len(data))
 	for i := range pts {

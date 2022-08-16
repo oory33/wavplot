@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	plt "github.com/oory33/wavplot/wav"
+	"github.com/oory33/wavplot/plt"
 
 	"github.com/youpy/go-wav"
 )
