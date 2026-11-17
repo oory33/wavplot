@@ -13,10 +13,8 @@ import (
 )
 
 func Wav(r *wav.Reader, ch uint, name string) {
-	length, _ := r.Datasize()
-	datas, _ := r.ReadSamples(length)
-
-	plotdata := make([]float64, 0, length)
+	datas, format := readSamples(r)
+	plotdata := make([]float64, 0, len(datas))
 
 	for _, sample := range datas {
 		plotdata = append(plotdata, float64(r.IntValue(sample, ch)))
@@ -26,8 +24,8 @@ func Wav(r *wav.Reader, ch uint, name string) {
 	p.X.Label.Text = "Time(sec)"
 	p.Y.Label.Text = "Amplitude"
 
-	fs, _ := r.Samprate()
-	bit, _ := r.BitsPerSample()
+	fs := format.SampleRate
+	bit := format.BitsPerSample
 	l, err1 := plotter.NewLine(normtime(plotdata, fs, bit))
 	if err1 != nil {
 		panic(err1)
@@ -41,10 +39,8 @@ func Wav(r *wav.Reader, ch uint, name string) {
 }
 
 func Spec(r *wav.Reader, ch uint, name string) {
-	length, _ := r.Datasize()
-	datas, _ := r.ReadSamples(length)
-
-	plotdata := make([]float64, 0, length)
+	datas, format := readSamples(r)
+	plotdata := make([]float64, 0, len(datas))
 
 	for _, sample := range datas {
 		plotdata = append(plotdata, float64(r.IntValue(sample, ch)))
@@ -70,8 +66,8 @@ func Spec(r *wav.Reader, ch uint, name string) {
 	p.X.Scale = plot.LogScale{}
 	p.X.Min = 20
 
-	fs, _ := r.Samprate()
-	bit, _ := r.BitsPerSample()
+	fs := format.SampleRate
+	bit := format.BitsPerSample
 	l, err1 := plotter.NewLine(normfreq(specL, fs, bit))
 	if err1 != nil {
 		panic(err1)
@@ -134,4 +130,24 @@ func normfreq(data []float64, srate uint32, bit uint16) plotter.XYs {
 		pts[i].Y = data[i]
 	}
 	return pts
+}
+
+// readSamples uses the metadata API provided by go-wav v0.3.2.
+func readSamples(r *wav.Reader) ([]wav.Sample, *wav.WavFormat) {
+	format, err := r.Format()
+	if err != nil {
+		panic(err)
+	}
+	if format.BlockAlign == 0 {
+		panic("wavplot: invalid WAV block alignment")
+	}
+	// Duration initializes WavData without consuming audio samples.
+	if _, err := r.Duration(); err != nil {
+		panic(err)
+	}
+	samples, err := r.ReadSamples(r.WavData.Size / uint32(format.BlockAlign))
+	if err != nil {
+		panic(err)
+	}
+	return samples, format
 }
