@@ -1,6 +1,6 @@
 module github.com/oory33/wavplot
 
-go 1.19
+go 1.25.0
 
 require (
 	github.com/mjibson/go-dsp v0.0.0-20180508042940-11479a337f12
@@ -17,6 +17,7 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/youpy/go-riff v0.1.0 // indirect
 	github.com/zaf/g711 v0.0.0-20190814101024-76a4a538f52b // indirect
-	golang.org/x/image v0.5.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/image v0.45.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
 )
